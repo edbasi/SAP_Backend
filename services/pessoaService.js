@@ -2,7 +2,7 @@
 import { log, error } from './logger.js';
 
 export async function criarPessoaCompleta({ r_pessoa, a_contatos, a_enderecos }) {
-  log('========== INÍCIO CRIAÇÃO DE PESSOA ==========');
+  log('==========sddfsdfsdsd INÍCIO CRIAÇÃO DE PESSOA  dsfsdfsdsd ==========');
 
   if (!r_pessoa) return { error: 'Dados Inválidos' };
 
