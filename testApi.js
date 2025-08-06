@@ -1,27 +1,51 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const API_URL = 'https://sap-backend-in48.onrender.com/pessoas';
-const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiYWRtaW4iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTQyMDk4NzcsImV4cCI6MTc1NDIxMzQ3N30.3nYh1mMceNdYqpq1MRrpdZJQdZxrZYXpSf5NXlZN5Wk'; // substitua pelo seu token JWT gerado
+// ✅ Resolve caminho do .env independente da pasta onde rodar
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const envPath = path.resolve(__dirname, '.env');
 
-async function testarPessoas() {
+dotenv.config({ path: envPath });
+
+const API_URL = "https://sap-backend-in48.onrender.com/pessoas";
+const TOKEN = process.env.JWT_TOKEN; // 👉 Lê o token do .env
+
+async function testarAPI() {
   try {
-    const res = await fetch(API_URL, {
+    console.log("🔄 Testando API:", API_URL);
+    console.log("🔑 Usando token:", TOKEN ? "✅ Encontrado" : "❌ Não encontrado");
+
+    const response = await fetch(API_URL, {
       headers: {
-        'Authorization': `Bearer ${TOKEN}`,
-        'Content-Type': 'application/json'
+        "Authorization": `Bearer ${TOKEN}`
       }
     });
 
-    if (!res.ok) {
-      console.error('Erro na requisição:', res.status, res.statusText);
+    if (!response.ok) {
+      console.error(`❌ Erro HTTP ${response.status}: ${response.statusText}`);
+      const erro = await response.text();
+      console.error("Detalhes:", erro);
       return;
     }
 
-    const data = await res.json();
-    console.log('Resposta da API /pessoas:', data);
+    const data = await response.json();
+
+    console.log("✅ Dados recebidos da API:");
+    console.table(data.map(p => ({
+      Seque: p.scodape,
+      Código: p.scodape,
+      Nome: p.snomape,
+      Docto: p.sdocape,
+      Classe: p.sclsape
+    })));
+
   } catch (err) {
-    console.error('Erro:', err.message);
+    console.error("❌ Erro na requisição:", err.message);
   }
 }
 
-testarPessoas();
+// ✅ Executa o teste
+testarAPI();
