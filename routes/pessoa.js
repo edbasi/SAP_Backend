@@ -1,5 +1,5 @@
 import express from 'express';
-import { supabase } from '../supabase.js'; // cliente do Supabase
+import { supabase } from '../supabase.js';
 import { autenticar } from '../middleware/auth.js';
 import { criarPessoaCompleta } from '../services/pessoaService.js'; // importa sua função
 
@@ -27,24 +27,6 @@ router.get('/:id', autenticar, async (req, res) => {
   res.json(data);
 });
 
-
-// // POST /pessoas — criar nova pessoa
-// // router.post('/', async (req, res) => {
-// router.post('/', autenticar, async (req, res) => {
-//   try {
-//     const dados = req.body;
-//     const idCriado = await criarPessoaCompleta(dados);
-
-//     if (!idCriado) {
-//       return res.status(500).json({ erro: 'Erro ao criar pessoa' });
-//     }
-
-//     return res.status(201).json({ sucesso: true, id: idCriado });
-//   } catch (err) {
-//     return res.status(500).json({ erro: 'Erro interno no servidor' });
-//   }
-// });
-
 // POST - Criar nova pessoa completa
 router.post('/', autenticar, async (req, res) => {
   const payload = req.body;
@@ -59,16 +41,6 @@ router.post('/', autenticar, async (req, res) => {
 
   return res.status(201).json({ success: true });
 });
-
-// // PUT /pessoas/:id — atualizar pessoa existente
-// router.put('/:id', autenticar, async (req, res) => {
-//   const { id } = req.params;
-//   const dados = req.body;
-
-//   const { error } = await supabase
-//     .from('pessoa')
-//     .update(dados)
-//     .eq('id', id);
 
 // PUT - Atualizar pessoa completa (reutiliza mesma função com idempotência do lado do SQL)
 router.put('/:id', autenticar, async (req, res) => {
@@ -85,10 +57,6 @@ router.put('/:id', autenticar, async (req, res) => {
   return res.status(200).json({ success: true });
 });
 
-//   if (error) return res.status(500).json({ erro: error.message });
-
-//   res.json({ sucesso: true });
-// });
 
 // DELETE /pessoas/:id — deletar pessoa
 router.delete('/:id', autenticar, async (req, res) => {
