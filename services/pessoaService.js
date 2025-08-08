@@ -7,6 +7,7 @@ export async function criarPessoaCompleta({ r_pessoa, a_contatos, a_enderecos })
   if (!r_pessoa) return { error: 'Dados Inválidos' };
 
   try {
+    
     log('[INPUT] Pessoa:', r_pessoa);
 
     if (!r_pessoa.s_Nome) return { error: 'Nome da pessoa é obrigatório' };

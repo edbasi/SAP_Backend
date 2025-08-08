@@ -1,5 +1,5 @@
 import express from 'express';
-import { supabase } from '../supabase.js';
+import { supabase } from '../supabase.js'; // cliente do Supabase
 import { autenticar } from '../middleware/auth.js';
 import { criarPessoaCompleta } from '../services/pessoaService.js'; // importa sua função
 
@@ -12,11 +12,13 @@ router.get('/', autenticar, async (req, res) => {
   res.json(data);
 });
 
+
+
 // GET /pessoas/:id — obter uma pessoa
 router.get('/:id', autenticar, async (req, res) => {
   const { id } = req.params;
   const { data, error } = await supabase
-    .from('vw_pessoa')
+    .from('vwPessoa')
     .select('*')
     .eq('id', id)
     .single();
@@ -25,37 +27,68 @@ router.get('/:id', autenticar, async (req, res) => {
   res.json(data);
 });
 
-// POST /pessoas — criar nova pessoa
-router.post('/', async (req, res) => {
+
+// // POST /pessoas — criar nova pessoa
+// // router.post('/', async (req, res) => {
 // router.post('/', autenticar, async (req, res) => {
-  try {
-    const dados = req.body;
-    const idCriado = await criarPessoaCompleta(dados);
+//   try {
+//     const dados = req.body;
+//     const idCriado = await criarPessoaCompleta(dados);
 
-    if (!idCriado) {
-      return res.status(500).json({ erro: 'Erro ao criar pessoa' });
-    }
+//     if (!idCriado) {
+//       return res.status(500).json({ erro: 'Erro ao criar pessoa' });
+//     }
 
-    return res.status(201).json({ sucesso: true, id: idCriado });
-  } catch (err) {
-    return res.status(500).json({ erro: 'Erro interno no servidor' });
+//     return res.status(201).json({ sucesso: true, id: idCriado });
+//   } catch (err) {
+//     return res.status(500).json({ erro: 'Erro interno no servidor' });
+//   }
+// });
+
+// POST - Criar nova pessoa completa
+router.post('/', autenticar, async (req, res) => {
+  const payload = req.body;
+
+  const { data, error } = await supabase
+    .rpc('inserir_pessoa_completa', payload);
+
+  if (error) {
+    console.error('Erro ao inserir pessoa completa:', error.message);
+    return res.status(500).json({ error: error.message });
   }
+
+  return res.status(201).json({ success: true });
 });
 
-// PUT /pessoas/:id — atualizar pessoa existente
+// // PUT /pessoas/:id — atualizar pessoa existente
+// router.put('/:id', autenticar, async (req, res) => {
+//   const { id } = req.params;
+//   const dados = req.body;
+
+//   const { error } = await supabase
+//     .from('pessoa')
+//     .update(dados)
+//     .eq('id', id);
+
+// PUT - Atualizar pessoa completa (reutiliza mesma função com idempotência do lado do SQL)
 router.put('/:id', autenticar, async (req, res) => {
-  const { id } = req.params;
-  const dados = req.body;
+  const payload = req.body;
 
-  const { error } = await supabase
-    .from('pessoa')
-    .update(dados)
-    .eq('id', id);
+  const { data, error } = await supabase
+    .rpc('inserir_pessoa_completa', payload);
 
-  if (error) return res.status(500).json({ erro: error.message });
+  if (error) {
+    console.error('Erro ao atualizar pessoa completa:', error.message);
+    return res.status(500).json({ error: error.message });
+  }
 
-  res.json({ sucesso: true });
+  return res.status(200).json({ success: true });
 });
+
+//   if (error) return res.status(500).json({ erro: error.message });
+
+//   res.json({ sucesso: true });
+// });
 
 // DELETE /pessoas/:id — deletar pessoa
 router.delete('/:id', autenticar, async (req, res) => {
