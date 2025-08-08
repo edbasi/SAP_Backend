@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { supabase } from './supabase.js';
 
 // ✅ Rotas REST
+import { execSync } from 'child_process';
 import clienteRoutes from './routes/cliente.js';
 import fornecedorRoutes from './routes/fornecedor.js';
 import operadorRoutes from './routes/operador.js';
@@ -31,7 +32,6 @@ app.use('/bancos', bancoRoutes);
 app.use('/limpezas', limpezaRoutes);
 app.use('/pessoas', pessoaRoutes);
 
-import { execSync } from 'child_process';
 
 // ✅ rota /versao que mostra o commit atual
 app.get('/versao', (req, res) => {

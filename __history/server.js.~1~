@@ -44,7 +44,7 @@ app.get('/versao', (req, res) => {
 });
 
 // ✅ Endpoint direto para a view vwpessoa (além de /pessoas)
-app.get('/VwPessoa', async (req, res) => {
+app.get('/vwpessoa', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('vwpessoa')
