@@ -1,7 +1,6 @@
 import express from 'express';
 import { supabase } from '../supabase.js';
 import { autenticar } from '../middleware/auth.js';
-//import { criarPessoaCompleta } from '../services/pessoaService_Removido.js'; // importa sua função
 
 const router = express.Router();
 
