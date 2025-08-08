@@ -1,4 +1,4 @@
-﻿import express from 'express';
+import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { supabase } from './supabase.js';
@@ -44,7 +44,7 @@ app.get('/versao', (req, res) => {
 });
 
 // ✅ Endpoint direto para a view vwpessoa (além de /pessoas)
-app.get('/vwpessoa', async (req, res) => {
+app.get('/VwPessoa', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('vwpessoa')
