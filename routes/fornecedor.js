@@ -1,6 +1,6 @@
 import express from 'express';
 //import { supabase } from '../supabase.js';
-import { criarPessoaCompleta } from '../services/pessoaService.js';
+//import { criarPessoaCompleta } from '../services/pessoaService.js';
 
 const router = express.Router();
 
