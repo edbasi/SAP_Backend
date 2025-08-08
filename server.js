@@ -43,11 +43,11 @@ app.get('/versao', (req, res) => {
   }
 });
 
-// ✅ Endpoint direto para a view vw_pessoa (além de /pessoas)
+// ✅ Endpoint direto para a view vwpessoa (além de /pessoas)
 app.get('/VwPessoa', async (req, res) => {
   try {
     const { data, error } = await supabase
-      .from('vw_pessoa')
+      .from('vwpessoa')
       .select('*');
 
     if (error) throw error;
