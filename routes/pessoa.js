@@ -7,7 +7,7 @@ const router = express.Router();
 
 // GET /pessoas — listar todas
 router.get('/', autenticar, async (req, res) => {
-  const { data, error } = await supabase.from('vw_pessoa').select('*');
+  const { data, error } = await supabase.from('vwPessoa').select('*');
   if (error) return res.status(500).json({ erro: error.message });
   res.json(data);
 });
