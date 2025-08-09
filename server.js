@@ -32,7 +32,6 @@ app.use('/bancos', bancoRoutes);
 app.use('/limpezas', limpezaRoutes);
 app.use('/pessoas', pessoaRoutes);
 
-
 // ✅ rota /versao que mostra o commit atual
 app.get('/versao', (req, res) => {
   try {
