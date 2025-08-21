@@ -5,12 +5,9 @@ import { supabase } from './supabase.js';
 
 // ✅ Rotas REST
 import { execSync } from 'child_process';
-import clienteRoutes from './routes/cliente.js';
-import fornecedorRoutes from './routes/fornecedor.js';
-import operadorRoutes from './routes/operador.js';
-import bancoRoutes from './routes/banco.js';
-import limpezaRoutes from './routes/limpeza.js';
+import movtoRoutes from './routes/movto.js';
 import pessoaRoutes from './routes/pessoa.js';
+import produtoRoutes from './routes/produto.js';
 import authRoutes from './routes/auth.js'; // ✅ Rota de login
 
 dotenv.config();
@@ -25,12 +22,9 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 
 // ✅ Rotas REST de negócio
-app.use('/clientes', clienteRoutes);
-app.use('/fornecedores', fornecedorRoutes);
-app.use('/operadores', operadorRoutes);
-app.use('/bancos', bancoRoutes);
-app.use('/limpezas', limpezaRoutes);
 app.use('/pessoas', pessoaRoutes);
+app.use('/movtos', movtoRoutes);
+app.use('/produtos', produtoRoutes);
 
 // ✅ rota /versao que mostra o commit atual
 app.get('/versao', (req, res) => {
@@ -47,11 +41,37 @@ app.get('/vwpessoa', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('vwpessoa')
-      .select('scodape,snomape,sclsape,sdocape,sTipApe');
+      .select('pi_id_pessoa,ps_cod_pessoa,ps_nom_pessoa,ps_doc_pessoa,ps_des_classe,ps_nom_banco,ps_tip_classe,pi_ind_classe');
     if (error) throw error;
     res.json(data);
   } catch (err) {
-    res.status(500).json({ mensagem: 'aaaaaa', erro: err.message });
+    res.status(500).json({ mensagem: 'vwpessoa', erro: err.message });
+  }
+});
+
+// ✅ Endpoint direto para a view vwproduto (além de /protutos)
+app.get('/vwproduto', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('vwproduto')
+      .select('*');
+    if (error) throw error;
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ mensagem: 'vwproduto', erro: err.message });
+  }
+});
+
+// ✅ Endpoint direto para a view vwmovto (além de /movtos)
+app.get('/vwmovto', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('vwmovto')
+      .select('*');
+    if (error) throw error;
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ mensagem: 'vwmovto', erro: err.message });
   }
 });
 

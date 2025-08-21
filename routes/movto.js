@@ -4,52 +4,52 @@ import { autenticar } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// GET /pessoas — listar todas
+// GET /movtos — listar todas
 router.get('/', autenticar, async (req, res) => {
-  const { data, error } = await supabase.from('vwpessoa').select('*');
+  const { data, error } = await supabase.from('vwmovto').select('*');
   if (error) return res.status(500).json({ erro: error.message });
   res.json(data);
 });
 
 
 
-// GET /pessoas/:id — obter uma pessoa
+// GET /movtos/:id — obter uma movto
 router.get('/:id', autenticar, async (req, res) => {
   const { id } = req.params;
   const { data, error } = await supabase
-    .from('vwpessoa')
+    .from('vwmovto')
     .select('*')
-    .eq('pi_id_pessoa', id)
+    .eq('pi_id_movto', id)
     .single();
 
-  if (error) return res.status(404).json({ erro: 'Pessoa não encontrada' });
+  if (error) return res.status(404).json({ erro: 'movto não encontrada' });
   res.json(data);
 });
 
-// POST - Criar nova pessoa completa
+// POST - Criar nova movto completa
 router.post('/', autenticar, async (req, res) => {
   const payload = req.body;
 
   const { data, error } = await supabase
-    .rpc('inserir_pessoa_completa', payload);
+    .rpc('inserir_Movto_completo', payload);
 
   if (error) {
-    console.error('Erro ao inserir pessoa completa:', error.message);
+    console.error('Erro ao inserir movimentação completa:', error.message);
     return res.status(500).json({ error: error.message });
   }
 
   return res.status(201).json({ success: true });
 });
 
-// PUT - Atualizar pessoa completa (reutiliza mesma função com idempotência do lado do SQL)
+// PUT - Atualizar movto completa (reutiliza mesma função com idempotência do lado do SQL)
 router.put('/:id', autenticar, async (req, res) => {
   const payload = req.body;
 
   const { data, error } = await supabase
-    .rpc('inserir_pessoa_completa', payload);
+    .rpc('inserir_movto_completa', payload);
 
   if (error) {
-    console.error('Erro ao atualizar pessoa completa:', error.message);
+    console.error('Erro ao atualizar movto completa:', error.message);
     return res.status(500).json({ error: error.message });
   }
 
@@ -57,14 +57,14 @@ router.put('/:id', autenticar, async (req, res) => {
 });
 
 
-// DELETE /pessoas/:id — deletar pessoa
+// DELETE /movtos/:id — deletar movto
 router.delete('/:id', autenticar, async (req, res) => {
   const { id } = req.params;
 
   const { error } = await supabase
-    .from('pessoa')
+    .from('movto')
     .delete()
-    .eq('pi_id_pessoa', id);
+    .eq('pi_id_movto', id);
 
   if (error) return res.status(500).json({ erro: error.message });
 
